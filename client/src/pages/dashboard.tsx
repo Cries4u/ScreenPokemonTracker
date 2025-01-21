@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ScreenTimeTracker from "@/components/screen-time-tracker";
 import StreakDisplay from "@/components/streak-display";
+import AnimatedClock from "@/components/animated-clock";
 import { useUser } from "@/hooks/use-user";
 
 export default function Dashboard() {
@@ -26,9 +27,10 @@ export default function Dashboard() {
         <div className="grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>Today's Progress</CardTitle>
+              <CardTitle>Track Your Time</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-6">
+              <AnimatedClock />
               <ScreenTimeTracker />
             </CardContent>
           </Card>

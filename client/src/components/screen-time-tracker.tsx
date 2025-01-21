@@ -35,32 +35,38 @@ export default function ScreenTimeTracker() {
   );
 
   useEffect(() => {
-    let interval: number;
+    let interval: NodeJS.Timeout | undefined;
+
     if (isTracking) {
-      interval = window.setInterval(() => {
+      // Update every minute
+      interval = setInterval(() => {
         setSessionTime((prev) => prev + 1);
-      }, 60000); // Update every minute
+      }, 60000);
     }
-    return () => clearInterval(interval);
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
   }, [isTracking]);
 
-  const handleToggleTracking = () => {
+  const handleToggleTracking = async () => {
     if (isTracking) {
       if (sessionTime > 0) {
-        addSession(sessionTime)
-          .then(() => {
-            toast({
-              title: "Session Recorded",
-              description: `Added ${sessionTime} minutes to your daily total.`,
-            });
-          })
-          .catch((error) => {
-            toast({
-              variant: "destructive",
-              title: "Error",
-              description: error.message,
-            });
+        try {
+          await addSession(sessionTime);
+          toast({
+            title: "Session Recorded",
+            description: `Added ${sessionTime} minutes to your daily total.`,
           });
+        } catch (error: any) {
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: error.message,
+          });
+        }
       }
       setSessionTime(0);
     }
@@ -113,7 +119,7 @@ export default function ScreenTimeTracker() {
       </TooltipProvider>
 
       {isTracking && (
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground animate-pulse">
           Current session: {sessionTime} minutes
         </p>
       )}
