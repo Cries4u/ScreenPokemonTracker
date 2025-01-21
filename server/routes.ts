@@ -22,7 +22,8 @@ export function registerRoutes(app: Express): Server {
     const session = await db.insert(screenTimeSessions)
       .values({
         userId: req.user!.id,
-        minutes
+        minutes,
+        date: new Date() // Explicitly set the date
       })
       .returning();
 
@@ -37,6 +38,11 @@ export function registerRoutes(app: Express): Server {
 
     const start = new Date(req.query.start as string);
     const end = new Date(req.query.end as string);
+
+    // Validate dates
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return res.status(400).send("Invalid date range");
+    }
 
     const sessions = await db.select()
       .from(screenTimeSessions)

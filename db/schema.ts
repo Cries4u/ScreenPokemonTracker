@@ -14,7 +14,7 @@ export const screenTimeSessions = pgTable("screen_time_sessions", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id).notNull(),
   minutes: integer("minutes").notNull(),
-  date: timestamp("date").defaultNow().notNull(),
+  date: timestamp("date", { withTimezone: true }).defaultNow().notNull(),
 });
 
 export const pokemonCards = pgTable("pokemon_cards", {
@@ -24,7 +24,7 @@ export const pokemonCards = pgTable("pokemon_cards", {
   name: text("name").notNull(),
   imageUrl: text("image_url").notNull(),
   rarity: text("rarity").notNull(),
-  earned: timestamp("earned").defaultNow().notNull(),
+  earned: timestamp("earned", { withTimezone: true }).defaultNow().notNull(),
 });
 
 export const achievements = pgTable("achievements", {
@@ -34,7 +34,7 @@ export const achievements = pgTable("achievements", {
   name: text("name").notNull(),
   description: text("description").notNull(),
   imageUrl: text("image_url").notNull(),
-  earned: timestamp("earned").defaultNow().notNull(),
+  earned: timestamp("earned", { withTimezone: true }).defaultNow().notNull(),
 });
 
 export const insertUserSchema = createInsertSchema(users);
